@@ -10,18 +10,11 @@ const cors = require('cors');
 
 require('dotenv').config();
 
-
 const authRouter = require('./routes/auth');
 const mdBooksRouter = require('./routes/mdBooks');
 const mdNotesRouter = require('./routes/mdNotes');
 
-
-
-
 const app = express();
-
-
-
 
 //MIDDLEWARES:
 app.use(logger('dev'));
