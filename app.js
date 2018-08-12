@@ -1,16 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mongoose = require('./database');
 
 const authRouter = require('./routes/auth');
 const mdBooksRouter = require('./routes/mdBooks');
 const mdNotesRouter = require('./routes/mdNotes');
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
-var app = express();
+
+
+const app = express();
 
 
 
@@ -22,8 +26,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+app.use(session({
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 // 1 day
+  }),
+  secret: 'authlivecode',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000
+  }
+ }));
+ 
 
 app.use('/api/auth', authRouter);
 app.use('/api/mdBooks', mdBooksRouter);
