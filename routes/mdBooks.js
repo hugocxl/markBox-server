@@ -19,15 +19,26 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/new', (req, res, next) => {
+  const { title } = req.body;
+  const newMdBook = new MdBook({
+    title
+  });
+  newMdBook.save(function(error){
+    if (error){
+      return res.status(401).json({code: 'unauthorized'});
+    } else {
+      return res.status(200).json({code: 'New MdBook created'});
+    }
+  });
+});
+
+router.post('/:id/edit', (req, res, next) => {
 })
 
-router.post ('/:id/edit', (req, res, next) => {
+router.post('/:id/delete', (req, res, next) => {
 })
 
-router.post ('/:id/delete', (req, res, next) => {
-})
-
-router.post ('/:id/new', (req, res, next) => {
+router.post('/:id/new', (req, res, next) => {
 })
 
 
