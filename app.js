@@ -5,12 +5,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('./database');
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 const authRouter = require('./routes/auth');
 const mdBooksRouter = require('./routes/mdBooks');
 const mdNotesRouter = require('./routes/mdNotes');
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 
 
@@ -64,3 +65,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({code: 'unexpected'});
   }
 });
+
+
+module.exports = app;
