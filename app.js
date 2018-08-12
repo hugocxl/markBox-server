@@ -4,9 +4,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('./database');
-
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const cors = require('cors');
+
+require('dotenv').config();
+
 
 const authRouter = require('./routes/auth');
 const mdBooksRouter = require('./routes/mdBooks');
@@ -27,6 +30,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors({
+  credentials: true,
+  origin: [process.env.CORS_URL]
+}));
 
 app.use(session({
   store: new MongoStore({
@@ -44,7 +51,7 @@ app.use(session({
 
 app.use('/api/auth', authRouter);
 app.use('/api/mdBooks', mdBooksRouter);
-app.use('/api/mdBooks', mdNotesRouter);
+app.use('/api/mdNotes', mdNotesRouter);
 
 
 
