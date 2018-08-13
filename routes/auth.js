@@ -19,14 +19,14 @@ router.post('/login', (req, res, next) => {
     return res.status(401).json({code: 'unauthorized'});
   }
 
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
 
-  if (!username || !password) {
+  if (!email || !password) {
     return res.status(422).json({code: 'validation'});
   }
 
-  User.findOne({ username })
+  User.findOne({ email })
     .then((user) => {
       if (!user) {
         return res.status(404).json({code: 'not-found'});
@@ -46,15 +46,14 @@ router.post('/signup', (req, res, next) => {
     return res.status(401).json({code: 'unauthorized'});
   }
 
-  const username = req.body.username;
   const password = req.body.password;
   const email = req.body.email;
 
-  if (!username || !password ||!email) {
+  if (!password ||!email) {
     return res.status(422).json({code: 'validation'});
   }
 
-  User.findOne({username}, 'username')
+  User.findOne({email}, 'email')
     .then((userExists) => {
       if (userExists) {
         return res.status(422).json({code: 'username-not-unique'});
@@ -64,7 +63,6 @@ router.post('/signup', (req, res, next) => {
       const hashPass = bcrypt.hashSync(password, salt);
 
       const newUser = User({
-        username,
         password: hashPass,
         email
       });
@@ -86,9 +84,6 @@ router.post('/logout', (req, res) => {
 
 
 router.post('/edit', (req, res) => {
-  const username1 = req.body.username1;
-  const username2 = req.body.username2;
-
   const password1 = req.body.password1;
   const password2 = req.body.password2;
 
