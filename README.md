@@ -39,73 +39,70 @@ Online notebooks collection based on Markdown (and empowered by GitHub - BACKLOG
 
 List of other features outside of the MVP scope:
 
-
-
-**GitHub**
++ **GitHub** - Integration with API?
 
 
 
 ## API ROUTES:
 
-+ **POST - api/auth/signup** - Body: username, password 
-+ **POST - api/auth/login** - Body: username, password
-+ **POST api/auth/logout**
+```javascript
+- POST - api/auth/signup - Body: username, password 
+- POST - api/auth/login - Body: username, password
+- POST api/auth/logout
+- GET api/auth/me - Check session status
 
-+ **GET api/auth/me** - Check session status
+- GET api/mdBooks -Get all books from user. (Id from session - Populate mdNotes id ) 
+- POST api/mdBooks/new - Body: title
+- POST api/mdBooks/:id/edit - POST: id, title
+- POST api/mdBooks/:id/delete - POST: id (delete all mdNotes too)
+
+- POST api/mdBooks/:id/new - POST: id, mdNote title, mdNote content
+- POST api/mdNotes/:id/delete - POST: id
+- POST api/mdNotes/:id/edit - POST: id, title, content
+```
 
 
-
-+ **GET api/mdBooks** -Get all books from user. (Id from session - Populate mdNotes id ) 
-+ **POST api/mdBooks/new** - Body: title
-+ **POST api/mdBooks/:id/edit** - POST: id, title
-+ **POST api/mdBooks/:id/delete** - POST: id (delete all mdNotes too)
-
-
-
-+ **POST api/mdBooks/:id/new** - POST: id, mdNote title, mdNote content
-
-+ **POST api/mdNotes/:id/delete** - POST: id
-
-+ **POST api/mdNotes/:id/edit** - POST: id, title, content
-
-  
 
 ## MODELS
 
-```
+```javascript
 User
  - username: String
  - password: String
  - email: String
 ```
 
-```
-mdBook
+```javascript
+MdBook
  - title: string
  - mdNotes: Array [<ObjectID>]
 ```
 
-```
-mdNotes
+```javascript
+MdNotes
 - title: string
 - content: string
 ```
 
 
 
-## Links
+## LINKS
+
+
 
 ### Trello
 
-https://trello.com/b/qPwy4hYr/localbuddy
+https://trello.com/b/FSBUOL9C/markhub
+
+
 
 ### Git
 
 The url to your repository and to your deployed project
 
-https://trello.com/b/FSBUOL9C/markhub
-
 [Deploy Link](http://heroku.com)
+
+
 
 ### Slides.com
 
@@ -115,3 +112,4 @@ The url to your presentation slides
 
 
 
+ 

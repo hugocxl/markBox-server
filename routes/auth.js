@@ -83,4 +83,22 @@ router.post('/logout', (req, res) => {
   return res.status(204).send();
 });
 
+
+
+router.post('/edit', (req, res) => {
+  const username1 = req.body.username1;
+  const username2 = req.body.username2;
+
+  const password1 = req.body.password1;
+  const password2 = req.body.password2;
+
+  const email = req.body.email1;
+  const email2 = req.body.email2;
+
+
+  return res.status(204).send();
+});
+
+
+
 module.exports = router;
