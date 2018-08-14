@@ -2,13 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const MdBook = require('../models/mdBook');
-const MdNote = require('../models/mdNote');
 const User = require('../models/user');
 
 
 router.get('/', (req, res, next) => {
-  const id = req.session.currentUser.id;
-  User.findById(userId).populate('mdBooks')
+  const { id } = req.session.currentUser.id;
+  User.findById(id).populate('mdBooks')
   .then(user => {
     return res.status(200).json(user.mdBooks)
   })
@@ -17,26 +16,41 @@ router.get('/', (req, res, next) => {
 
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
-  console.log(title);
   const newMdBook = new MdBook({
     title
   });
   newMdBook.save()
     .then(data => {
-      res.status(200);
-      return res.json(data);
+      return res.status(200).json(data);
     })
-    .catch();
+    .catch(error => {
+      next(error);
+    });
 });
 
-router.post('/:id/edit', (req, res, next) => {
-})
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params.id;
+  const { title } = req.body;
+  MdBook.findByIdAndUpdate(id, title)
+  .then(data => {
+    return res.status(200).json(data)
+  })
+  .catch(error => {
+    next(error);
+  });
+});
 
-router.post('/:id/delete', (req, res, next) => {
-})
-
-router.post('/:id/new', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
+  const {id} = req.params.id; 
+  MdBook.findByIdAndRemove(id)
+  .then(book => {
+    return res.status(200).json(book)
+  })
+  .catch(error => {
+    next(error);
+  });
 })
 
 
 module.exports = router;
+
