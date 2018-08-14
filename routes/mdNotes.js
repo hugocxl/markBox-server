@@ -13,4 +13,4 @@ router.post ('/:id/edit', (req, res, next) => {
 })
 
 
-module.exports = MdNote;
+module.exports = router;
