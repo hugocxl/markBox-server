@@ -5,7 +5,7 @@ const MdNote = require('../models/mdNote');
 
 
 router.get('/:id', (req, res, next) => {
-  const { id } = req.params.id;
+  const id = req.params.id;
 
   MdNote.findById(id)
   .then(note => {
@@ -18,7 +18,7 @@ router.get('/:id', (req, res, next) => {
 
 
 router.put('/:id', (req, res, next) => {
-  const { id } = req.params.id;
+  const id = req.params.id;
 
   const { title, content } = req.body;
   const update = { title, content }
@@ -34,7 +34,7 @@ router.put('/:id', (req, res, next) => {
 
 
 router.delete('/:id', (req, res, next) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
   MdNote.findByIdAndRemove(id)
   .then(note => {
     return res.status(200).json(note);

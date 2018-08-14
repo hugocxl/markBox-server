@@ -8,8 +8,17 @@ const ObjectId = Schema.Types.ObjectId;
 
 
 const mdBookSchema = new Schema({
-  title: { type: String, required: true },
-  mdNotes: { type: ObjectId, ref: 'MdNotes' },
+  title: { 
+    type: String, 
+    required: true 
+  },
+  owner_id: { 
+    type: ObjectId, 
+    ref: 'User',
+  },
+  mdNotes: [{ 
+    type: ObjectId, 
+    ref: 'MdNotes' }],
 });
 
 const MdBook = mongoose.model('MdBook', mdBookSchema);
