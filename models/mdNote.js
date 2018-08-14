@@ -6,7 +6,10 @@ const Schema   = mongoose.Schema;
 
 const mdNoteSchema = new Schema({
   title: { type: String, required: true },
-  content: String
+  content: String,
+},
+{
+  timestamps:true
 });
 
 const MdNote = mongoose.model('MdNote', mdNoteSchema);
