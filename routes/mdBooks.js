@@ -9,7 +9,10 @@ const User = require('../models/user');
 router.get('/', (req, res, next) => {
   const id = req.session.currentUser.id;
 
-  MdBook.find( {owner_id: id} )
+  MdBook.find( {owner_id: id} ).populate({
+    path: 'mdNotes',
+    model: 'MdNote'
+  })
   .then(books => {
     return res.status(200).json(books)
   })
