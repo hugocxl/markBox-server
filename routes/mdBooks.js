@@ -67,11 +67,13 @@ router.post('/:id/new', (req, res, next) => {
     title,
     content
   });
-  
-  MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
-  .then(book => {
-    return res.status(200).json(book);
-  })
+  newMdNote.save()
+    .then(mdNote =>{
+      MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
+        .then(book => {
+          return res.status(200).json(book);
+        })
+    })
   .catch(error => {
     next(error);
   });
