@@ -1,16 +1,50 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 const router = express.Router();
 
 const MdNote = require('../models/mdNote');
 
 
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params.id;
 
-router.post ('/:id/delete', (req, res, next) => {
-})
+  MdNote.findById(id)
+  .then(note => {
+      return res.status(200).json(note)
+    })
+    .catch(error => {
+      next(error);
+    })
+});
 
-router.post ('/:id/edit', (req, res, next) => {
-})
+
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params.id;
+
+  const { title, content } = req.body;
+  const update = { title, content }
+  
+  MdNote.findByIdAndUpdate(id, update)
+  .then(note => {
+    return res.status(200).json(note);
+  })
+  .catch(error => {
+    next(error);
+  });
+});
+
+
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params.id;
+  MdNote.findByIdAndRemove(id)
+  .then(note => {
+    return res.status(200).json(note);
+  })
+  .catch(error => {
+    next(error);
+  })
+});
+  
+
 
 
 module.exports = router;
