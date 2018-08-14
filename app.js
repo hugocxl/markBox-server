@@ -15,14 +15,6 @@ const mdBooksRouter = require('./routes/mdBooks');
 const mdNotesRouter = require('./routes/mdNotes');
 
 const app = express();
-
-//MIDDLEWARES:
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(cors({
   credentials: true,
   origin: [process.env.CORS_URL]
@@ -40,14 +32,19 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
  }));
+
+//MIDDLEWARES:
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+
  
-
 app.use('/api/auth', authRouter);
-app.use('/api/mdBooks', mdBooksRouter);
-app.use('/api/mdNotes', mdNotesRouter);
-
-
-
+app.use('/api/mdbooks', mdBooksRouter);
+app.use('/api/mdnotes', mdNotesRouter);
 
 
 //ERROR:
