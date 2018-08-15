@@ -22,17 +22,26 @@ router.get('/', (req, res, next) => {
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
   const owner_id = req.session.currentUser.id;
+  const newMdNote = new MdNote({
+    title: 'New note'
+  });
   const newMdBook = new MdBook({
     owner_id,
     title,
   });
-  newMdBook.save()
-    .then(data => {
-      return res.status(200).json(data);
-    })
-    .catch(error => {
-      next(error);
-    });
+
+  newMdNote.save()
+  .then(mdNote => {
+    newMdBook.mdNotes.push([mdNote.id]);
+    return newMdBook.save()
+  })
+  .then(newBook => {
+    return res.status(200).json(newBook);
+  })
+  .catch(error => {
+    next(error);
+  });
+
 });
 
 router.put('/:id', (req, res, next) => {
@@ -67,12 +76,12 @@ router.post('/:id/new', (req, res, next) => {
     content
   });
   newMdNote.save()
-    .then(mdNote =>{
-      MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
-        .then(book => {
-          return res.status(200).json(book);
-        })
-    })
+  .then(mdNote =>{
+    return MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
+  })
+  .then(book => {
+    return res.status(200).json(book);
+  })
   .catch(error => {
     next(error);
   });
