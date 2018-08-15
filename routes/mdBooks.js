@@ -58,7 +58,6 @@ router.delete('/:id', (req, res, next) => {
   });
 })
 
-
 router.post('/:id/new', (req, res, next) => {
   const id = req.params.id;
   const { title, content } = req.body;

@@ -3,7 +3,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-
+const authMiddleware = require('../middlewares/authmiddleware');
 const User = require('../models/user');
 
 router.get('/me', (req, res, next) => {
@@ -14,17 +14,10 @@ router.get('/me', (req, res, next) => {
   }
 });
 
-router.post('/login', (req, res, next) => {
-  if (req.session.currentUser) {
-    return res.status(401).json({code: 'unauthorized'});
-  }
-
+router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
+  
   const email = req.body.email;
   const password = req.body.password;
-
-  if (!email || !password) {
-    return res.status(422).json({code: 'validation'});
-  }
 
   User.findOne({ email })
     .then((user) => {
@@ -41,26 +34,18 @@ router.post('/login', (req, res, next) => {
     .catch(next);
 });
 
-router.post('/signup', (req, res, next) => {
-  if (req.session.currentUser) {
-    return res.status(401).json({code: 'unauthorized'});
-  }
+router.post('/signup', authMiddleware.validateUserInputs, (req, res, next) => {
 
   const password = req.body.password;
   const email = req.body.email;
-
-  if (!password ||!email) {
-    return res.status(422).json({code: 'validation'});
-  }
 
   User.findOne({email}, 'email')
     .then((userExists) => {
       if (userExists) {
         return res.status(422).json({code: 'username-not-unique'});
       }
-
-      const salt = bcrypt.genSaltSync(10);
-      const hashPass = bcrypt.hashSync(password, salt);
+      
+      const hashPass = authMiddleware.encryptPassword;
 
       const newUser = User({
         password: hashPass,
@@ -80,8 +65,6 @@ router.post('/logout', (req, res) => {
   req.session.currentUser = null;
   return res.status(204).send();
 });
-
-
 
 router.post('/edit', (req, res) => {
   const password1 = req.body.password1;
