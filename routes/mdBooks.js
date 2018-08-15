@@ -19,6 +19,19 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  MdBook.findById( id ).populate({
+    path: 'mdNotes',
+    model: 'MdNote'
+  })
+  .then(book => {
+    return res.status(200).json(book)
+  })
+  .catch(next);
+});
+
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
   const owner_id = req.session.currentUser.id;
