@@ -15,10 +15,5 @@ module.exports = {
     }
   },
   encryptPassword: (req, res, next) => {
-    const password = req.body.password;
-    const salt = bcrypt.genSaltSync(10);
-    const hashPass = bcrypt.hashSync(password, salt);
-
-    return hashPass;
   }
 };

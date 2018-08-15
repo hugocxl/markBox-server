@@ -45,7 +45,9 @@ router.post('/signup', authMiddleware.validateUserInputs, (req, res, next) => {
         return res.status(422).json({code: 'username-not-unique'});
       }
       
-      const hashPass = authMiddleware.encryptPassword;
+      const password = req.body.password;
+      const salt = bcrypt.genSaltSync(10);
+      const hashPass = bcrypt.hashSync(password, salt);
 
       const newUser = User({
         password: hashPass,
