@@ -90,8 +90,10 @@ router.post('/:id/new', (req, res, next) => {
   });
   newMdNote.save()
   .then(mdNote =>{
-    MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } });
-    return res.status(200).json(mdNote);
+    MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
+      .then(book => {
+        return res.status(200).json(mdNote);
+    })
   })
   .catch(error => {
     next(error);
