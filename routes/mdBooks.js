@@ -7,7 +7,7 @@ const User = require('../models/user');
 
 
 router.get('/', (req, res, next) => {
-  const id = req.session.currentUser.id;
+  const id = req.session.currentUser._id;
 
   MdBook.find( {owner_id: id} ).populate({
     path: 'mdNotes',
@@ -34,7 +34,7 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
-  const owner_id = req.session.currentUser.id;
+  const owner_id = req.session.currentUser._id;
   const newMdNote = new MdNote({
     title: 'New note'
   });
