@@ -31,6 +31,19 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
+router.put(':id/pinned', (req, res, next) => {
+  const id = req.params.id;
+  const status = req.body;
+
+  MdNote.findByIdAndUpdate(id, {pinned: status})
+  .then(note => {
+    return res.status(200).json(note);
+  })
+  .catch(error => {
+    next(error);
+  })
+})
+
 
 router.delete('/:id', (req, res, next) => {
   const { id } = req.params;

@@ -84,11 +84,13 @@ router.post('/:id/new', (req, res, next) => {
   const id = req.params.id;
   const owner_id = req.session.currentUser._id;
   const { title, content } = req.body;
+  const pinned = false;
   
   const newMdNote = new MdNote({
     title,
     content,
-    owner_id
+    owner_id,
+    pinned
   });
   newMdNote.save()
   .then(mdNote =>{

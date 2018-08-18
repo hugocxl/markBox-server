@@ -16,7 +16,7 @@ const mdNoteSchema = new Schema({
       type: ObjectId, 
       ref: 'User',
     },
-  pinned: false,
+  pinned: Boolean,
     },
   {
     timestamps: true
