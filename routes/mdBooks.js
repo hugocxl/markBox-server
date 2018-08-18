@@ -19,6 +19,23 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
+
+// router.get('/latest', (req, res, next) => {
+//   const id = req.session.currentUser._id;
+//   MdBook.find( {owner_id: id} ).populate(
+//     {
+//       path: 'mdNotes',
+//       model: 'MdNote',
+//       options:{ 
+//         sort:{created_at : 1}
+//       }})
+//     .limit(4)
+//     .then(mdBooks => {
+//       return res.status(200).json(mdBooks)
+//     })
+//     .catch(next);
+// });
+
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
 
