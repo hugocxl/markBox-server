@@ -82,11 +82,13 @@ router.delete('/:id', (req, res, next) => {
 
 router.post('/:id/new', (req, res, next) => {
   const id = req.params.id;
+  const owner_id = req.session.currentUser._id;
   const { title, content } = req.body;
   
   const newMdNote = new MdNote({
     title,
-    content
+    content,
+    owner_id
   });
   newMdNote.save()
   .then(mdNote =>{

@@ -19,7 +19,6 @@ router.get('/:id', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-
   const { title, content } = req.body;
   const update = { title, content }
   
