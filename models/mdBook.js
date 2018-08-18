@@ -1,11 +1,8 @@
 'use strict';
 
-
 const mongoose = require("mongoose");
 const Schema   = mongoose.Schema;
-
 const ObjectId = Schema.Types.ObjectId;
-
 
 const mdBookSchema = new Schema({
   title: { 
@@ -16,10 +13,17 @@ const mdBookSchema = new Schema({
     type: ObjectId, 
     ref: 'User',
   },
-  mdNotes: [{ 
-    type: ObjectId, 
-    ref: 'MdNotes' }],
-});
+  mdNotes: 
+    [{ 
+      type: ObjectId, 
+      ref: 'MdNotes' 
+    }],
+
+  }, 
+  {
+    timestamps:true
+  }
+);
 
 const MdBook = mongoose.model('MdBook', mdBookSchema);
 
