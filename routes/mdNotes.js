@@ -43,7 +43,8 @@ router.put('/:id', (req, res, next) => {
 
 router.put('/:id/pin', (req, res, next) => {
   const id = req.params.id;
-  const pinned = req.body.pinned;
+  const pinned = req.body.status;
+  console.log(req.body);
 
   MdNote.findByIdAndUpdate(id, {pinned: pinned})
   .then(note => {
