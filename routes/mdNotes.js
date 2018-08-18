@@ -4,6 +4,17 @@ const router = express.Router();
 const MdNote = require('../models/mdNote');
 
 
+router.get('/latest', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  console.log(id);
+  MdNote.find( {owner_id: id} ).sort({ updatedAt : -1 })
+    .limit(6)
+    .then(mdNotes => {
+      return res.status(200).json(mdNotes)
+    })
+    .catch(next);
+});
+
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
 
@@ -42,7 +53,6 @@ router.put('/:id/pin', (req, res, next) => {
     next(error);
   })
 })
-
 
 router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
