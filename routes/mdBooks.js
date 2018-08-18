@@ -53,7 +53,8 @@ router.post('/new', (req, res, next) => {
   const { title } = req.body;
   const owner_id = req.session.currentUser._id;
   const newMdNote = new MdNote({
-    title: 'New note'
+    title: 'New note',
+    pinned: false
   });
   const newMdBook = new MdBook({
     owner_id,
