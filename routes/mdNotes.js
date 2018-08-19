@@ -28,6 +28,16 @@ router.get('/:id', (req, res, next) => {
     })
 });
 
+router.post('/search', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  const searchStr = req.body.search;
+  MdNote.find({ owner_id: id , content: { "$regex": searchStr, "$options": "i" } }).sort({ updatedAt : -1 }).limit(20)
+  .then(mdNotes => {
+    return res.status(200).json(mdNotes)
+  })
+  .catch(next);
+});
+
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { title, content } = req.body;
@@ -77,23 +87,6 @@ router.delete('/:id', (req, res, next) => {
     next(error);
   })
 });
-
-
-router.post('/search', (req, res, next) => {
-  const id = req.session.currentUser._id;
-  const search = req.body.search.split(' ');
-  MdNote
-    .find( {owner_id: id} )
-    .sort({ updatedAt : -1 })
-    .limit(20)
-    .where('content').in(`${ search }`)
-    .then(mdNotes => {
-      return res.status(200).json(mdNotes)
-    })
-    .catch(next);
-});
-
-  
 
 
 
