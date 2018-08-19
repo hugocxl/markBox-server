@@ -7,8 +7,17 @@ const MdNote = require('../models/mdNote');
 
 router.get('/latest', (req, res, next) => {
   const id = req.session.currentUser._id;
-  console.log(id);
   MdNote.find( {owner_id: id} ).sort({ updatedAt : -1 })
+    .limit(6)
+    .then(mdNotes => {
+      return res.status(200).json(mdNotes)
+    })
+    .catch(next);
+});
+
+router.get('/pinned', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  MdNote.find( {owner_id: id, pinned: true} )
     .limit(6)
     .then(mdNotes => {
       return res.status(200).json(mdNotes)
@@ -31,6 +40,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/search', (req, res, next) => {
   const id = req.session.currentUser._id;
   const searchStr = req.body.search;
+  console.log(searchStr);
   MdNote.find({ owner_id: id , content: { "$regex": searchStr, "$options": "i" } }).sort({ updatedAt : -1 }).limit(20)
   .then(mdNotes => {
     return res.status(200).json(mdNotes)
