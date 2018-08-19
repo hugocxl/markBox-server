@@ -35,7 +35,6 @@ router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
 });
 
 router.post('/signup', authMiddleware.validateUserInputs, (req, res, next) => {
-
   const password = req.body.password;
   const email = req.body.email;
 
@@ -68,16 +67,37 @@ router.post('/logout', (req, res) => {
   return res.status(204).send();
 });
 
-router.post('/edit', (req, res) => {
-  const password1 = req.body.password1;
-  const password2 = req.body.password2;
+router.put('/edit', (req, res, next) => {
+  const { _id } = req.session.currentUser
 
-  const email = req.body.email1;
-  const email2 = req.body.email2;
+  if(req.body.email){
+    const { email } = req.body;
+    
+    User.findByIdAndUpdate(_id, {email: 'email'})
+    .then(user => {
+      res.status(200).json();
+    })
+    .catch(error => {
+      next(error);
+    });
+  };
 
+  if(req.body.password){
+    const { password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hashPass = bcrypt.hashSync(password, salt);
 
-  return res.status(204).send();
+    User.findByIdAndUpdate(_id, {password: 'hashPass'})
+    .then(user => {
+      res.status(200).json();
+    })
+    .catch(error => {
+      next(error);
+    });
+  };
+
 });
+
 
 
 
