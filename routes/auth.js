@@ -73,9 +73,10 @@ router.put('/edit', (req, res, next) => {
   if(req.body.email){
     const { email } = req.body;
     
-    User.findByIdAndUpdate(_id, {email: 'email'})
+    User.findByIdAndUpdate(_id, {email: email})
     .then(user => {
-      res.status(200).json();
+      console.log(user)
+      res.status(200).json(user);
     })
     .catch(error => {
       next(error);
@@ -87,7 +88,7 @@ router.put('/edit', (req, res, next) => {
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
 
-    User.findByIdAndUpdate(_id, {password: 'hashPass'})
+    User.findByIdAndUpdate(_id, {password: hashPass})
     .then(user => {
       res.status(200).json();
     })
