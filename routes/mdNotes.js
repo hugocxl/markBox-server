@@ -44,7 +44,6 @@ router.put('/:id', (req, res, next) => {
 router.put('/:id/pin', (req, res, next) => {
   const id = req.params.id;
   const pinned = req.body.status;
-  console.log(req.body);
 
   MdNote.findByIdAndUpdate(id, {pinned: pinned})
   .then(note => {
@@ -65,6 +64,22 @@ router.delete('/:id', (req, res, next) => {
     next(error);
   })
 });
+
+
+router.post('/search', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  const search = req.body.search.split(' ');
+  MdNote
+    .find( {owner_id: id} )
+    .sort({ updatedAt : -1 })
+    .limit(20)
+    .where('content').in(`${ search }`)
+    .then(mdNotes => {
+      return res.status(200).json(mdNotes)
+    })
+    .catch(next);
+});
+
   
 
 
