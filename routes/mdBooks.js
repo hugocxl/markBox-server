@@ -19,6 +19,19 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
+// router.get('/latest', (req, res, next) => {
+//   const id = req.session.currentUser._id;
+
+//   MdBook.find( {owner_id: id} ).populate({
+//     path: 'mdNotes',
+//     model: 'MdNote'
+//   }).sort({"mdNotes.updatedAt" : -1}).limit(4)
+//   .then(books => {
+//     return res.status(200).json(books)
+//   })
+//   .catch(next);
+// });
+
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
 
@@ -104,6 +117,24 @@ router.post('/:id/new', (req, res, next) => {
     next(error);
   });
 });
+
+
+
+
+
+
+// router.get('/:id/mdbook', (req, res, next) => {
+//   const userId = req.session.currentUser._id;
+//   const id = req.params.id;
+//   MdBook.
+//   find({ mdNotes: mongoose.Types.ObjectId("5b7897317e7bd91c9e0cc6b7") })
+//   .then(mdBook => {
+//     return res.status(200).json(mdBook);
+//   })
+//   .catch(err => {
+//     next(err);
+//   })
+// })
 
 
 
