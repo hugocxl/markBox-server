@@ -5,7 +5,7 @@ const MdNote = require('../models/mdNote');
 const MdBook = require('../models/mdBook');
 const User = require('../models/user');
 
-
+// GET ALL MD-BOOKS FROM LOGGED IN USER
 router.get('/', (req, res, next) => {
   const id = req.session.currentUser._id;
 
@@ -19,19 +19,7 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
-// router.get('/latest', (req, res, next) => {
-//   const id = req.session.currentUser._id;
-
-//   MdBook.find( {owner_id: id} ).populate({
-//     path: 'mdNotes',
-//     model: 'MdNote'
-//   }).sort({"mdNotes.updatedAt" : -1}).limit(4)
-//   .then(books => {
-//     return res.status(200).json(books)
-//   })
-//   .catch(next);
-// });
-
+// GET ONE MD-BOOK WITH ALL NOTES
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
 
@@ -45,6 +33,7 @@ router.get('/:id', (req, res, next) => {
   .catch(next);
 });
 
+//ADD NEW MD-BOOK WITH EMPTY MD-NOTE
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
   const owner_id = req.session.currentUser._id;
@@ -71,10 +60,11 @@ router.post('/new', (req, res, next) => {
 
 });
 
+//EDIT MD-BOOK TITLE
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { title } = req.body;
-  MdBook.findByIdAndUpdate(id, title)
+  MdBook.findByIdAndUpdate(id, { title })
   .then(data => {
     return res.status(200).json(data)
   })
@@ -83,6 +73,7 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
+//DELETE MD-BOOK
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id; 
   MdBook.findByIdAndRemove(id)
@@ -94,6 +85,7 @@ router.delete('/:id', (req, res, next) => {
   });
 })
 
+//ADD NEW MD-NOTE AND PUSH ID TO MD-BOOK COLLECTION
 router.post('/:id/new', (req, res, next) => {
   const id = req.params.id;
   const owner_id = req.session.currentUser._id;
@@ -121,7 +113,18 @@ router.post('/:id/new', (req, res, next) => {
 
 
 
+// router.get('/latest', (req, res, next) => {
+//   const id = req.session.currentUser._id;
 
+//   MdBook.find( {owner_id: id} ).populate({
+//     path: 'mdNotes',
+//     model: 'MdNote'
+//   }).sort({"mdNotes.updatedAt" : -1}).limit(4)
+//   .then(books => {
+//     return res.status(200).json(books)
+//   })
+//   .catch(next);
+// });
 
 // router.get('/:id/mdbook', (req, res, next) => {
 //   const userId = req.session.currentUser._id;
