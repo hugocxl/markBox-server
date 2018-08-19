@@ -1,6 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const router = express.Router();
+const mongoose = require('mongoose');
 const MdBook = require('../models/mdNote');
 const MdNote = require('../models/mdNote');
 
@@ -28,26 +28,24 @@ router.get('/:id', (req, res, next) => {
     })
 });
 
-router.get('/:id/mdbook', (req, res, next) => {
-  const userId = req.session.currentUser._id;
-  const id = req.params.id;
-  
-  MdBook.
-  find({ mdNotes: mongoose.Types.ObjectId(id) })
-  .then(mdBook => {
-    return res.status(200).json(mdBook);
-  })
-  .catch(err => {
-    next(err);
-  })
-})
-
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { title, content } = req.body;
   const update = { title, content }
   
   MdNote.findByIdAndUpdate(id, update)
+  .then(note => {
+    return res.status(200).json(note);
+  })
+  .catch(error => {
+    next(error);
+  });
+});
+
+router.put('/:id/title', (req, res, next) => {
+  const id = req.params.id;
+  const { title } = req.body;
+  MdNote.findByIdAndUpdate(id, {title})
   .then(note => {
     return res.status(200).json(note);
   })
