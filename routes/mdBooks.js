@@ -65,7 +65,7 @@ router.post('/new', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { title } = req.body;
-  MdBook.findByIdAndUpdate(id, { title })
+  MdBook.findByIdAndUpdate(id, { title },  {new: true})
   .then(data => {
     return res.status(200).json(data)
   })
@@ -102,7 +102,7 @@ router.post('/:id/new', (req, res, next) => {
   });
   newMdNote.save()
   .then(mdNote =>{
-    MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } })
+    MdBook.findByIdAndUpdate(id, { $push: { mdNotes: newMdNote } },  {new: true})
       .then(book => {
         return res.status(200).json(mdNote);
     })
