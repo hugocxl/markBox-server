@@ -37,15 +37,16 @@ router.get('/:id', (req, res, next) => {
 router.post('/new', (req, res, next) => {
   const { title } = req.body;
   const owner_id = req.session.currentUser._id;
-  const newMdNote = new MdNote({
-    title: 'New note',
-    pinned: false
-  });
   const newMdBook = new MdBook({
     owner_id,
     title,
   });
-
+  const newMdNote = new MdNote({
+    title: 'New note',
+    book_id: newMdBook._id,
+    owner_id: owner_id,
+    pinned: false
+  });
   newMdNote.save()
   .then(mdNote => {
     newMdBook.mdNotes.push([mdNote.id]);
@@ -95,6 +96,7 @@ router.post('/:id/new', (req, res, next) => {
   const newMdNote = new MdNote({
     title,
     content,
+    book_id: id,
     owner_id,
     pinned
   });

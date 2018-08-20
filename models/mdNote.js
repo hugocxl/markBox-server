@@ -11,7 +11,8 @@ const mdNoteSchema = new Schema({
       required: true 
     },
   content: String,
-  owner_id: 
+  book_id: ObjectId,
+  owner_id:
     { 
       type: ObjectId, 
       ref: 'User',
