@@ -18,7 +18,7 @@ router.get('/latest', (req, res, next) => {
 router.get('/pinned', (req, res, next) => {
   const id = req.session.currentUser._id;
   MdNote.find( {owner_id: id, pinned: true} )
-    .limit(6)
+    // .limit(6)
     .then(mdNotes => {
       return res.status(200).json(mdNotes)
     })
