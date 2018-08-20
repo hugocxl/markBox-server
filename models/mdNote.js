@@ -5,11 +5,10 @@ const Schema   = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 const mdNoteSchema = new Schema({
-  title: 
-    { 
-      type: String, 
-      required: true 
-    },
+  title: { 
+    type: String, 
+    required: true 
+  },
   content: String,
   owner_id:
     { 
@@ -17,7 +16,7 @@ const mdNoteSchema = new Schema({
       ref: 'User',
     },
   pinned: Boolean,
-    },
+},
   {
     timestamps: true
   }

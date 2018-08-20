@@ -14,6 +14,18 @@ router.get('/me', (req, res, next) => {
   }
 });
 
+router.put('/settings', (req, res, next) => {
+  const { settings } = req.body.settings;
+  const { _id } = req.session.currentUser;
+  User.findByIdAndUpdate(_id, settings,  {new: true})
+  .then(user => {
+    res.status(200).json(user)
+  })
+  .catch(error => {
+    next(error);
+  })
+});
+
 router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
   
   const email = req.body.email;
@@ -26,6 +38,7 @@ router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
       }
       if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
+        console.log(req.session.currentUser)
         return res.json(user);
       } else {
         return res.status(404).json({code: 'not-found'});
@@ -69,28 +82,41 @@ router.post('/logout', (req, res) => {
 
 router.put('/edit', (req, res, next) => {
   const { _id } = req.session.currentUser
-
+  
   if(req.body.email){
-    const { email } = req.body;
+    const email = req.body.email;
     
-    User.findByIdAndUpdate(_id, {email: email})
+    User.findByIdAndUpdate(_id, {email: email}, {new: true})
     .then(user => {
-      console.log(user)
+      req.session.currentUser = user
       res.status(200).json(user);
     })
     .catch(error => {
       next(error);
     });
   };
-
+  
   if(req.body.password){
     const { password } = req.body;
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
-
-    User.findByIdAndUpdate(_id, {password: hashPass})
+    
+    User.findByIdAndUpdate(_id, {password: hashPass}, {new: true})
     .then(user => {
-      res.status(200).json();
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      next(error);
+    });
+  };
+  
+  if(req.body.settings){
+    const settings  = req.body.settings
+    console.log(req.body)
+
+    User.findByIdAndUpdate(_id, {settings: settings}, {new: true})
+    .then(user => {
+      res.status(200).json(user);
     })
     .catch(error => {
       next(error);
