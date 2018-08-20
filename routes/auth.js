@@ -82,14 +82,12 @@ router.post('/logout', (req, res) => {
 
 router.put('/edit', (req, res, next) => {
   const { _id } = req.session.currentUser
-  console.log(req.body)
-
+  
   if(req.body.email){
-    const { email } = req.body;
+    const email = req.body.email;
     
-    User.findByIdAndUpdate(_id, {email}, {new: true})
+    User.findByIdAndUpdate(_id, {email: email}, {new: true})
     .then(user => {
-      console.log(user)
       req.session.currentUser = user
       res.status(200).json(user);
     })
@@ -97,12 +95,12 @@ router.put('/edit', (req, res, next) => {
       next(error);
     });
   };
-
+  
   if(req.body.password){
     const { password } = req.body;
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
-
+    
     User.findByIdAndUpdate(_id, {password: hashPass}, {new: true})
     .then(user => {
       res.status(200).json(user);
@@ -111,9 +109,10 @@ router.put('/edit', (req, res, next) => {
       next(error);
     });
   };
-
+  
   if(req.body.settings){
-    const { settings } = req.body;
+    const settings  = req.body.settings
+    console.log(req.body)
 
     User.findByIdAndUpdate(_id, {settings: settings}, {new: true})
     .then(user => {
