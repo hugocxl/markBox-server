@@ -19,6 +19,34 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
+router.get('/pinned', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  const idArr = [];
+
+  MdNote.find( {owner_id: id, pinned: true} ).sort({ updatedAt : -1 })
+    .limit(10)
+    .then(mdNotes => {
+      console.log(mdNotes);
+      mdNotes.forEach(mdNote => {
+        idArr.push(mdNote.id);
+      });
+      MdBook.find({ mdNotes: { $in: idArr } }).populate({
+        path: 'mdNotes',
+        model: 'MdNote'
+      })
+      .then(mdBooks => {
+        mdBooks.forEach((book) => {
+          arr = book.mdNotes.filter((note) => {
+            return idArr.indexOf(note._id.toString()) > -1;
+          })
+          book.mdNotes = arr;
+        });
+        return res.status(200).json(mdBooks);
+      })
+    })
+    .catch(next);
+});
+
 // GET ONE MD-BOOK WITH ALL NOTES
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
@@ -43,7 +71,6 @@ router.post('/new', (req, res, next) => {
   });
   const newMdNote = new MdNote({
     title: 'New note',
-    book_id: newMdBook._id,
     owner_id: owner_id,
     pinned: false
   });
@@ -96,7 +123,6 @@ router.post('/:id/new', (req, res, next) => {
   const newMdNote = new MdNote({
     title,
     content,
-    book_id: id,
     owner_id,
     pinned
   });

@@ -1,29 +1,71 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const MdBook = require('../models/mdNote');
+const MdBook = require('../models/mdBook');
 const MdNote = require('../models/mdNote');
 
 
 router.get('/latest', (req, res, next) => {
   const id = req.session.currentUser._id;
+  const idArr = [];
   MdNote.find( {owner_id: id} ).sort({ updatedAt : -1 })
     .limit(6)
+    .then(mdNotes => {
+      mdNotes.forEach(mdNote => {
+        idArr.push(mdNote.id);
+      });
+      MdBook.find({ mdNotes: { $in: idArr } }).populate({
+        path: 'mdNotes',
+        model: 'MdNote'
+      })
+      .then(mdBooks => {
+        mdBooks.forEach((book) => {
+          arr = book.mdNotes.filter((note) => {
+            return idArr.indexOf(note._id.toString()) > -1;
+          })
+          book.mdNotes = arr;
+        });
+        return res.status(200).json(mdBooks);
+      })
+    })
+    .catch(next);
+});
+
+router.post('/search', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  const searchStr = req.body.search;
+  idArr = [];
+  MdNote.find({ owner_id: id , content: { "$regex": searchStr, "$options": "i" } }).sort({ updatedAt : -1 }).limit(20)
+  .then(mdNotes => {
+    mdNotes.forEach(mdNote => {
+      idArr.push(mdNote.id);
+    });
+    MdBook.find({ mdNotes: { $in: idArr } }).populate({
+      path: 'mdNotes',
+      model: 'MdNote'
+    })
+    .then(mdBooks => {
+      mdBooks.forEach((book) => {
+        arr = book.mdNotes.filter((note) => {
+          return idArr.indexOf(note._id.toString()) > -1;
+        })
+        book.mdNotes = arr;
+      });
+      return res.status(200).json(mdBooks);
+    })
+  })
+  .catch(next);
+});
+
+router.get('/pinned', (req, res, next) => {
+  const id = req.session.currentUser._id;
+  MdNote.find( {owner_id: id, pinned: true} )
     .then(mdNotes => {
       return res.status(200).json(mdNotes)
     })
     .catch(next);
 });
 
-router.get('/pinned', (req, res, next) => {
-  const id = req.session.currentUser._id;
-  MdNote.find( {owner_id: id, pinned: true} )
-    .limit(6)
-    .then(mdNotes => {
-      return res.status(200).json(mdNotes)
-    })
-    .catch(next);
-});
 
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
@@ -35,17 +77,6 @@ router.get('/:id', (req, res, next) => {
     .catch(error => {
       next(error);
     })
-});
-
-router.post('/search', (req, res, next) => {
-  const id = req.session.currentUser._id;
-  const searchStr = req.body.search;
-  console.log(searchStr);
-  MdNote.find({ owner_id: id , content: { "$regex": searchStr, "$options": "i" } }).sort({ updatedAt : -1 }).limit(20)
-  .then(mdNotes => {
-    return res.status(200).json(mdNotes)
-  })
-  .catch(next);
 });
 
 router.put('/:id', (req, res, next) => {
