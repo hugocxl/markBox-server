@@ -10,11 +10,12 @@ const mdNoteSchema = new Schema({
     required: true 
   },
   content: String,
-  owner_id: { 
-    type: ObjectId, 
-    ref: 'User',
-  },
-  
+  book_id: ObjectId,
+  owner_id:
+    { 
+      type: ObjectId, 
+      ref: 'User',
+    },
   pinned: Boolean,
 },
   {
