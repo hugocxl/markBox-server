@@ -14,6 +14,18 @@ router.get('/me', (req, res, next) => {
   }
 });
 
+router.put('/settings', (req, res, next) => {
+  const { settings } = req.body.settings;
+  const { _id } = req.session.currentUser;
+  User.findByIdAndUpdate(_id, settings)
+  .then(user => {
+    res.status(200).json(user)
+  })
+  .catch(error => {
+    next(error);
+  })
+});
+
 router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
   
   const email = req.body.email;
@@ -26,6 +38,7 @@ router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
       }
       if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
+        console.log(req.session.currentUser)
         return res.json(user);
       } else {
         return res.status(404).json({code: 'not-found'});
