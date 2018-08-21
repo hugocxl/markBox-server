@@ -12,7 +12,7 @@ const userSchema = new Schema({
   settings : {
     editView: {type: Boolean, default: false },
     htmlView:  {type: Boolean, default: true },
-    autoSave:  {type: Boolean, default: false},
+    autoSave:  {type: Boolean, default: true},
     preview:  {type: Boolean, default: false},
   }
 });

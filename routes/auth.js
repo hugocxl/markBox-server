@@ -112,10 +112,12 @@ router.put('/edit', (req, res, next) => {
   
   if(req.body.settings){
     const settings  = req.body.settings
-    console.log(req.body)
+    console.log('ANTES', req.body)
 
-    User.findByIdAndUpdate(_id, {settings: settings}, {new: true})
+    
+    User.findByIdAndUpdate(_id, {settings}, {new: true})
     .then(user => {
+      console.log('DESPUES', user)
       res.status(200).json(user);
     })
     .catch(error => {
