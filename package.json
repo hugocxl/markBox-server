@@ -7,6 +7,10 @@
     "watch": "nodemon ./bin/www",
     "seed" : "node ./bin/seed.js"
   },
+  "engines": {
+    "node": "8.11.3",
+    "npm": "6.3.0"
+  },
   "dependencies": {
     "bcrypt": "^3.0.0",
     "connect-mongo": "^2.0.1",
