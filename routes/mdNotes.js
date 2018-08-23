@@ -9,7 +9,7 @@ router.get('/latest', (req, res, next) => {
   const id = req.session.currentUser._id;
   const idArr = [];
   MdNote.find( {owner_id: id} ).sort({ updatedAt : -1 })
-    .limit(6)
+    .limit(3)
     .then(mdNotes => {
       mdNotes.forEach(mdNote => {
         idArr.push(mdNote.id);

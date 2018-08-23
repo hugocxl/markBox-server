@@ -8,7 +8,11 @@ const User = require('../models/user');
 
 router.get('/me', (req, res, next) => {
   if (req.session.currentUser) {
-    res.json(req.session.currentUser);
+    const { _id } = req.session.currentUser;
+    User.findById(_id)
+    .then(user => {
+      res.json(user);
+    })
   } else {
     res.status(404).json({code: 'not-found'});
   }
@@ -85,7 +89,6 @@ router.put('/edit', (req, res, next) => {
   
   if(req.body.email){
     const email = req.body.email;
-    
     User.findByIdAndUpdate(_id, {email: email}, {new: true})
     .then(user => {
       req.session.currentUser = user
@@ -111,13 +114,11 @@ router.put('/edit', (req, res, next) => {
   };
   
   if(req.body.settings){
+    console.log(req.body.settings);
     const settings  = req.body.settings
-    console.log('ANTES', req.body)
-
     
-    User.findByIdAndUpdate(_id, {settings}, {new: true})
+    User.findByIdAndUpdate(_id, { settings }, {new: true})
     .then(user => {
-      console.log('DESPUES', user)
       res.status(200).json(user);
     })
     .catch(error => {
