@@ -24,7 +24,7 @@ router.get('/pinned', (req, res, next) => {
   const idArr = [];
 
   MdNote.find( {owner_id: id, pinned: true} ).sort({ updatedAt : -1 })
-    .limit(10)
+    .limit(3)
     .then(mdNotes => {
       console.log(mdNotes);
       mdNotes.forEach(mdNote => {
