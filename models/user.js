@@ -14,6 +14,7 @@ const userSchema = new Schema({
     htmlView:  {type: Boolean, default: true },
     autoSave:  {type: Boolean, default: false},
     preview:  {type: Boolean, default: false},
+    nightMode: {type: Boolean, default: false}
   }
 });
 

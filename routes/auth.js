@@ -6,28 +6,13 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/authmiddleware');
 const User = require('../models/user');
 
+
 router.get('/me', (req, res, next) => {
   if (req.session.currentUser) {
-    const { _id } = req.session.currentUser;
-    User.findById(_id)
-    .then(user => {
-      res.json(user);
-    })
+    res.json(req.session.currentUser);
   } else {
     res.status(404).json({code: 'not-found'});
   }
-});
-
-router.put('/settings', (req, res, next) => {
-  const { settings } = req.body.settings;
-  const { _id } = req.session.currentUser;
-  User.findByIdAndUpdate(_id, settings,  {new: true})
-  .then(user => {
-    res.status(200).json(user)
-  })
-  .catch(error => {
-    next(error);
-  })
 });
 
 router.post('/login', authMiddleware.validateUserInputs, (req, res, next) => {
@@ -106,6 +91,7 @@ router.put('/edit', (req, res, next) => {
     
     User.findByIdAndUpdate(_id, {password: hashPass}, {new: true})
     .then(user => {
+      req.session.currentUser = user;
       res.status(200).json(user);
     })
     .catch(error => {
@@ -119,6 +105,7 @@ router.put('/edit', (req, res, next) => {
     
     User.findByIdAndUpdate(_id, { settings }, {new: true})
     .then(user => {
+      req.session.currentUser = user;
       res.status(200).json(user);
     })
     .catch(error => {
